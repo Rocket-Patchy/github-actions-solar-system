@@ -65,8 +65,7 @@ jobs:
 
     dev-deploy:
       runs-on: ubuntu-latest
-      environment:
-        development
+      environment: development
      # needs: docker
       steps:
         - name: Check out repository
