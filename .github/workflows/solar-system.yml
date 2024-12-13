@@ -108,7 +108,7 @@ jobs:
           run: kubectl version --short -o yaml
 
         - name: Get ingress controller IP
-          run: echo 'INGRESS_IP=kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}"' >> $GITHUB_ENV
+          run: echo 'INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")' >> $GITHUB_ENV
 
         - name: Update manifest files
           uses: cschleiden/replace-tokens@v1
