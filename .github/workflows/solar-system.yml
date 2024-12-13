@@ -85,3 +85,20 @@ jobs:
         - name: Verify configuration
           run: kubectl version --short -o yaml
 
+        - name: Get ingress controller IP
+          run: echo 'INGRESS_IP=kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}"' >> "$GITHUB_ENV"
+
+        - name: Update manifest files
+          uses: cschleiden/replace-tokens@v1
+          with:
+            files: '["kubernetes/development/*yaml"]'
+            tokenPrefix: '_{_'
+            tokenSuffix: '_}_'
+          env:
+            NAMESPACE: "{{ env.NAMESPACE }}"
+            REPLICAS: "{{ env. REPLICAS }}"
+            IMAGE: 'ghcr.io/{githubUsername}/solar-system:{githubSha}'
+            INGRESS_IP: "{{ env.INGRESS_IP }}"
+
+        - name: Read manifest files
+          run: cat kubernetes/development/*.yaml
